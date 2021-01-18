@@ -1,9 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
+from os.path import basename
 
 url = "http://books.toscrape.com/"
 
 urls_categories = []
+next_page_categories = []
 categories_range = []
 names_categories = []
 book_url_range = []
@@ -17,17 +19,30 @@ def scrape_categories(element_category):
 	names_categories.append(name_category)
 	return names_categories, urls_categories
 
-def to_next_page(minestrone):
-	result_items = minestrone.find('form', {'class': 'form-horizontal'}).find('strong').get_text(strip=True)
+def to_next_page(minestrone, link_category):
+	next_page = minestrone.find('li', {'class': 'next'})
 
-	if int(result_items) > 20 and int(result_items) < 1000:
-		items_page_number = minestrone.find('form', {'class': 'form-horizontal'}).select('strong')[2].get_text(strip=True)
+	if next_page != None:
+		next_page_element = next_page.find('a').get('href')
+		next_page_url = link_category.replace('index.html', str(next_page_element))
+		next_page_categories.append(next_page_url)
+		print(next_page_url)
+		# urls_categories.append(next_page_url)
 
-		if result_items > items_page_number :
-			next_page = minestrone.find('li', {'class': 'next'}).find('a').get('href')
-			next_page_url = link_category.replace('index.html', str(next_page))
-			urls_categories.append(next_page_url)
-	return urls_categories
+	for t in next_page_categories:
+		response_next = requests.get(t)
+		miso = BeautifulSoup(response_next.text, 'lxml')
+		body0 = miso.find('body')
+		next_page2 = miso.find('li', {'class': 'next'})			
+
+		if next_page2 != None:
+			next_page_element_2 = next_page2.find('a').get('href')
+			next_page_url_2 = link_category.replace('index.html', str(next_page_element_2))
+			next_page_categories.append(next_page_url_2)
+
+			print('2 ' + next_page_url_2)
+
+		return next_page_categories
 
 def get_url_book(link):
 	book_url = link.find('a').get('href').replace('../../../', str(url) + 'catalogue/').replace('../../', str(url) + 'catalogue/')
@@ -50,6 +65,7 @@ def scrape_book_data(body2):
 	categories_range.append(category)
 	return universal_product_code, price_including_tax, price_excluding_tax, number_available, review_rating, title, image_url, product_description, category, picture_url_range
 
+
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'lxml')
 
@@ -60,19 +76,19 @@ navigation_panel = soup.find('ul', {'class': 'nav nav-list'}).find('ul').select(
 for element_category in navigation_panel:
 	scrape_categories(element_category)
 
-for l in urls_categories:
-	response1 = requests.get(l)
+for link_category in urls_categories:
+	response1 = requests.get(link_category)
 	minestrone = BeautifulSoup(response1.text, 'lxml')
 	body = minestrone.find('body')
-	next_page = minestrone.find('li', {'class': 'next'})
-	if next_page != None:
-		endpoint = next_page.find('a').get('href')
-		next_page_url = l.replace('index.html', str(endpoint))
-		urls_categories.append(next_page_url)
-		print(urls_categories)
 
-	#next_page_url = l.replace('index.html', str(next_page))
-	#urls_categories.append(next_page_url)
+	if response1.ok:
+		#to_next_page(minestrone, link_category)
+
+		articles = body.findAll('h3')
+		for link in articles:
+			get_url_book(link)
+
+
 """
 
 # Stocke les informations relatives aux catégories
@@ -118,11 +134,11 @@ with open('categories links.txt', 'w') as categories_links_file:
 							body2 = borsch.find('body')
 							scrape_book_data(body2)
 
-								#image_response = requests.get(pic).content
-								#images_range.append(image_response)
-								#for img in images_range:
-									#with open('image.jpg', 'wb') as image_format :
-										#image_format.write(img)
+
+						# Télécharge les images des livres (200)
+								for pic in picture_url_range:
+									with open(basename(pic), 'wb') as picture_file
+									picture_file.write(requests.get(pic).content)
 
 
 						
@@ -134,7 +150,8 @@ with open('categories links.txt', 'w') as categories_links_file:
 							#travel_file.write('product_page_url, universal_ product_code (upc), title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url,\n')
 
 
-						# Télécharge les images des livres
+
+
 """
 
 
