@@ -1,13 +1,12 @@
 import requests
-import os.path
+import os, csv
 from bs4 import BeautifulSoup
 from os.path import basename
 
+url = "http://books.toscrape.com/"
+
+
 def scrape_categories():
-
-	global url
-
-	url = "http://books.toscrape.com/"
 
 	response = requests.get(url)
 	soup = BeautifulSoup(response.text, 'lxml')
@@ -19,7 +18,7 @@ def scrape_categories():
 	for element_category in navigation_panel: 
 		url_category = url + element_category.get('href')
 		get_url_book(url_category)
-		name_category = element_category.get_text(strip=True)
+		name_category = element_category.get_text(strip = True)
 	return url_category
 
 def get_url_book(url_category):
@@ -46,7 +45,6 @@ def get_url_book(url_category):
 			break
 	return
 
-
 def scrape_book_data(book_url):
 
 	response = requests.get(book_url)
@@ -65,27 +63,33 @@ def scrape_book_data(book_url):
 	product_description = body.find('article', {'class':'product_page'}).select('p')[3].get_text(strip = True)
 	category = body.find('ul', {'class':'breadcrumb'}).select('li')[2].find('a').get_text(strip = True)
 
-	with open(basename(image_url), 'wb') as picture_file:
-		picture_file.write(requests.get(image_url).content)
-
 	book_data = {'book_url': book_url, 'universal_product_code': universal_product_code, 'price_including_tax': price_including_tax, 'price_excluding_tax':price_excluding_tax, 'number_available': number_available, 'review_rating':review_rating, 'title':title, 'image_url':image_url, 'product_description': product_description, 'category':category}
-	save_datas(book_data)
-	return book_data
+	
+	if os.path.exists('./'+str(category)):
+		save_datas(book_data)
+		with open(os.path.join('./'+ str(category), '') + basename(image_url), 'wb') as picture_file:
+			picture_file.write(requests.get(image_url).content)
 
+	else:
+		os.mkdir(str(category))
+		save_datas(book_data)
+		with open(os.path.join('./'+ str(category), '') + basename(image_url), 'wb') as picture_file:
+			picture_file.write(requests.get(image_url).content)
+
+	return book_data
 
 def save_datas(book_data):
 	category = book_data['category']
 
-	if os.path.exists('/Users/nwx72/Desktop/env/'+ str(category)+ '.csv'):
-		with open(str(category)+'.csv', 'a') as data_file:
-			data_file.write(book_data['book_url'] + ', ' + book_data['universal_product_code'] + ', ' + ', ' + book_data['title'] + ', ' + book_data['price_including_tax'] + ', ' + book_data['price_excluding_tax'] + ', ' + book_data['number_available'] + ', ' + book_data['product_description'] + ', ' + book_data['category'] + ', ' + book_data['review_rating'] + ', ' + book_data['image_url'] + '\n')
+	if os.path.exists('./' + str(category) + '/'+ str(category) +'.csv'):
+		with open(os.path.join('./'+ str(category), '') + str(category)+'.csv', 'a', encoding = 'utf-8') as data_file:
+			data_file.write(book_data['book_url'] + ', ' + book_data['universal_product_code'] + ', ' + book_data['title'] + ', ' + book_data['price_including_tax'] + ', ' + book_data['price_excluding_tax'] + ', ' + book_data['number_available'] + ', ' + book_data['product_description'] + ', ' + book_data['category'] + ', ' + book_data['review_rating'] + ', ' + book_data['image_url'] + '\n')
 
 	else:
-		with open(str(category)+'.csv', 'w') as data_file:
-			data_file.write('product_page_url, universal_ product_code (upc), title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url,\n')
-			data_file.write(book_data['book_url'] + ', ' + book_data['universal_product_code'] + ', ' + ', ' + book_data['title'] + ', ' + book_data['price_including_tax'] + ', ' + book_data['price_excluding_tax'] + ', ' + book_data['number_available'] + ', ' + book_data['product_description'] + ', ' + book_data['category'] + ', ' + book_data['review_rating'] + ', ' + book_data['image_url'] + '\n')
+		with open(os.path.join('./'+ str(category), '') + str(category)+'.csv', 'w', encoding = 'utf-8', newline= '') as data_file:
+			data_file.write('product_page_url, universal_product_code (upc), title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url')
+			data_file.write(book_data['book_url'] + ', ' + book_data['universal_product_code'] + ', ' + book_data['title'] + ', ' + book_data['price_including_tax'] + ', ' + book_data['price_excluding_tax'] + ', ' + book_data['number_available'] + ', ' + book_data['product_description'] + ', ' + book_data['category'] + ', ' + book_data['review_rating'] + ', ' + book_data['image_url'] + '\n')
 
 	return
-
 
 scrape_categories()
