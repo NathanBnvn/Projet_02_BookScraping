@@ -5,7 +5,6 @@ from os.path import basename
 
 url = "http://books.toscrape.com/"
 
-
 def scrape_categories():
 
 	response = requests.get(url)
@@ -48,7 +47,7 @@ def get_url_book(url_category):
 def scrape_book_data(book_url):
 
 	response = requests.get(book_url)
-	soup = BeautifulSoup(response.text, 'lxml')
+	soup = BeautifulSoup(response.content.decode('utf-8', 'ignore'), 'lxml')
 	body = soup.find('body')
 
 	table = body.find('table')
@@ -58,9 +57,9 @@ def scrape_book_data(book_url):
 	number_available = table.select('td')[5].get_text(strip = True)
 	review_rating = table.select('td')[6].get_text(strip = True)
 
-	title = body.find('h1').get_text(strip = True)
+	title = body.find('h1').get_text(strip = True).replace(',', ' ')
 	image_url = body.find('img').get('src').replace('../../', str(url))
-	product_description = body.find('article', {'class':'product_page'}).select('p')[3].get_text(strip = True)
+	product_description = body.find('article', {'class':'product_page'}).select('p')[3].get_text(strip = True).replace(',', ' ')
 	category = body.find('ul', {'class':'breadcrumb'}).select('li')[2].find('a').get_text(strip = True)
 
 	book_data = {'book_url': book_url, 'universal_product_code': universal_product_code, 'price_including_tax': price_including_tax, 'price_excluding_tax':price_excluding_tax, 'number_available': number_available, 'review_rating':review_rating, 'title':title, 'image_url':image_url, 'product_description': product_description, 'category':category}
@@ -86,8 +85,8 @@ def save_datas(book_data):
 			data_file.write(book_data['book_url'] + ', ' + book_data['universal_product_code'] + ', ' + book_data['title'] + ', ' + book_data['price_including_tax'] + ', ' + book_data['price_excluding_tax'] + ', ' + book_data['number_available'] + ', ' + book_data['product_description'] + ', ' + book_data['category'] + ', ' + book_data['review_rating'] + ', ' + book_data['image_url'] + '\n')
 
 	else:
-		with open(os.path.join('./'+ str(category), '') + str(category)+'.csv', 'w', encoding = 'utf-8', newline= '') as data_file:
-			data_file.write('product_page_url, universal_product_code (upc), title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url')
+		with open(os.path.join('./'+ str(category), '') + str(category)+'.csv', 'w', encoding = 'utf-8') as data_file:
+			data_file.write("product_page_url, universal_product_code (upc), title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url\n")
 			data_file.write(book_data['book_url'] + ', ' + book_data['universal_product_code'] + ', ' + book_data['title'] + ', ' + book_data['price_including_tax'] + ', ' + book_data['price_excluding_tax'] + ', ' + book_data['number_available'] + ', ' + book_data['product_description'] + ', ' + book_data['category'] + ', ' + book_data['review_rating'] + ', ' + book_data['image_url'] + '\n')
 
 	return
