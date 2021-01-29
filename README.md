@@ -2,7 +2,7 @@
 
 Ceci est un script permettant de récuperer les données du site Book to Scrape via Beautifulsoup
 
-**Installer et activer l'environnement virtuel
+**Installer et activer l'environnement virtuel**
 
 Depuis votre terminal, entre les commandes suivantes :
 * $ python -m venv env
