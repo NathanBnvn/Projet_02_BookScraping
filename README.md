@@ -1,4 +1,4 @@
-# Projet_01-BookScraping
+# Projet_02_BookScraping
 
 Ceci est un script permettant de récuperer les données du site Book to Scrape via Beautifulsoup
 
