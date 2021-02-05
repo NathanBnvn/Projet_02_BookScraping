@@ -1,14 +1,18 @@
 # Projet_02_BookScraping
 
-Ceci est un script permettant de récuperer les données du site Book to Scrape via Beautifulsoup
+This project is a script that download Book to Scrape website data with Beautifulsoup.
 
-**Installer et activer l'environnement virtuel**
+**Install and activate virtual environment **
 
-Depuis votre terminal, entre les commandes suivantes :
+From your terminal, enter the following commands :
 * $ python -m venv env
 * $ source env/bin/activate
 
-Concernant les packages nécessaires à l'execution du programme veuillez vous référer au fichier requirement.txt.
+Once the environment is activated (the environment directory name will be between parenthesis), install the necessary packages :
+* $ pip install requirement.txt
 
-Une fois l'environnement activé (le nom de l'environnement apparait entre parenthèse), lancé le script :
-* $(env) python3 Scrape.py
+Then to access the script download it from GitHub or enter the following command :
+$ git clone https://github.com/Nate072/Projet_02_BookScraping.git
+Co
+To start the script :
+* $(env) python Scrape.py
