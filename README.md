@@ -2,7 +2,7 @@
 
 This project is a script that download Book to Scrape website data with Beautifulsoup.
 
-**Install and activate virtual environment **
+** Install and activate virtual environment **
 
 From your terminal, enter the following commands :
 * $ python -m venv env
