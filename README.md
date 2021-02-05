@@ -12,7 +12,7 @@ Once the environment is activated (the environment directory name will be betwee
 * $ pip install requirement.txt
 
 Then to access the script download it from GitHub or enter the following command :
-$ git clone https://github.com/Nate072/Projet_02_BookScraping.git
-Co
+* $ git clone https://github.com/Nate072/Projet_02_BookScraping.git
+
 To start the script :
 * $(env) python Scrape.py
