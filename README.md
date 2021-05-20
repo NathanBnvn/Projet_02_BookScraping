@@ -3,8 +3,8 @@
 
 # Projet_02_BookScraping
 
-This project is a script that download Book to Scrape website data with Beautifulsoup. 
-The data downloaded are picture in jpg format and csv files.
+This project is a script that download Book to Scrape website datas with Beautifulsoup. 
+The datas downloaded are picture in jpg format and csv files, one by categories.
 
 **Install and activate virtual environment**
 
