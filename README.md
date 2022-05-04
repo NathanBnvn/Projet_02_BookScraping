@@ -3,14 +3,14 @@
 
 ![openclassrooms-project](https://user-images.githubusercontent.com/45998296/166692502-a22abdc0-e774-4ec6-8d7c-f86cb6e55825.svg)
 
-**Introduction**
+##Introduction
 
 This project is a script that download Book to Scrape website datas with Beautifulsoup.   
 The datas downloaded are pictures in jpg format and csv files, one by categories.
 
 ![alt text](https://images.unsplash.com/photo-1478749485505-2a903a729c63?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=850&q=60)
 
-**Install and activate virtual environment**
+##Install and activate virtual environment
 
 From your terminal, enter the following commands :
 
@@ -22,7 +22,7 @@ On Windows :
 * py -m venv env
 * .\env\Scripts\activate
 
-**Download and install the project**
+##Download and install the project
 
 To access the script download it from GitHub or enter the following command :
 * $ git clone https://github.com/Nate072/Projet_02_BookScraping.git
@@ -30,7 +30,7 @@ To access the script download it from GitHub or enter the following command :
 Once the environment is activated (the environment directory name will be between parenthesis) and the project is cloned, install the necessary packages :
 * $ pip install requirement.txt
 
-**Launch the project**
+##Launch the project
 
 To start the script :
 * $(env) python Scrape.py
